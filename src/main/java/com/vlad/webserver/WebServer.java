@@ -22,7 +22,6 @@ public class WebServer {
 
     public void start() throws IOException {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-
             while (true) {
                 try (Socket socket = serverSocket.accept();
                      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -51,17 +50,15 @@ public class WebServer {
         } else {
             send(bufferedWriter, OK);
 
-            BufferedReader fileStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-
-            String line;
-            while ((line = fileStream.readLine()) != null) {
-                bufferedWriter.write(line);
+            try(BufferedReader fileStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+                String line;
+                while ((line = fileStream.readLine()) != null) {
+                    bufferedWriter.write(line);
+                }
+                bufferedWriter.newLine();
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
             }
-            bufferedWriter.newLine();
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-
-            fileStream.close();
         }
     }
 
