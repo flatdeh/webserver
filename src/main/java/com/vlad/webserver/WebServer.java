@@ -5,9 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer {
-    public static final String BAD_REQUEST = "HTTP/1.1 400 Bad Request\n";
-    public static final String OK = "HTTP/1.1 200 OK\n";
-    public static final String NOT_FOUND = "HTTP/1.1 404 NotFound\n";
+    private static final String BAD_REQUEST = "HTTP/1.1 400 Bad Request\n";
+    private static final String OK = "HTTP/1.1 200 OK\n";
+    private static final String NOT_FOUND = "HTTP/1.1 404 NotFound\n";
     private int port;
     private String webAppPath;
     private String resource;
