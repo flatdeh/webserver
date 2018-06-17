@@ -56,8 +56,6 @@ public class WebServer {
                     bufferedWriter.write(line);
                 }
                 bufferedWriter.newLine();
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
             }
         }
     }
@@ -65,8 +63,6 @@ public class WebServer {
     private void send(BufferedWriter bufferedWriter, String requestCode) throws IOException {
         bufferedWriter.write(requestCode);
         bufferedWriter.newLine();
-        bufferedWriter.newLine();
         bufferedWriter.flush();
     }
-
 }
