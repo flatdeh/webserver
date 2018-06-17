@@ -10,7 +10,6 @@ public class WebServer {
     private static final String NOT_FOUND = "HTTP/1.1 404 NotFound\n";
     private int port;
     private String webAppPath;
-    private String resource;
 
     public void setPort(int port) {
         this.port = port;
@@ -32,7 +31,7 @@ public class WebServer {
                         String[] parseMessage = message.split(" ");
 
                         if (parseMessage[0].equals("GET")) {
-                            resource = webAppPath + parseMessage[1];
+                            String resource = webAppPath + parseMessage[1];
                             get(bufferedWriter, resource);
                         } else {
                             send(bufferedWriter , BAD_REQUEST);
