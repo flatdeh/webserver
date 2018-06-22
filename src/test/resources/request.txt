@@ -1,4 +1,4 @@
-GET / HTTP/1.1
+GET /index.html HTTP/1.1
 Host: alizar.habrahabr.ru
 Server: nginx/1.2.1
 Date: Sat, 08 Mar 2014 22:53:46 GMT

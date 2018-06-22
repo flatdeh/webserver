@@ -29,12 +29,4 @@ public class ResponseWriter {
         bufferedWriter.newLine();
         bufferedWriter.newLine();
     }
-
-    public void writeStatusLine() throws IOException {
-
-    }
-
-    public void writeHeaders() {
-
-    }
 }
