@@ -14,15 +14,12 @@ public class WebServer {
                 try(Socket socket = server.accept();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-
                     RequestHandler requestHandler = new RequestHandler(bufferedReader, bufferedWriter, resourceReader);
                     requestHandler.handle();
 
                 }
             }
         }
-
-
     }
 
     public void setPort(int port) {

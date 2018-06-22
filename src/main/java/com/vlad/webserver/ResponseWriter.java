@@ -15,7 +15,6 @@ public class ResponseWriter {
         bufferedWriter.newLine();
         bufferedWriter.write(content);
         bufferedWriter.newLine();
-
     }
 
     public void writeNotFoundResponse() throws IOException {

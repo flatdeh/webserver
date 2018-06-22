@@ -17,6 +17,5 @@ public class RequestParserTest {
             assertEquals("/index.html", request.getUrl());
             assertEquals(HttpMethod.GET, request.getMethod());
         }
-
     }
 }
