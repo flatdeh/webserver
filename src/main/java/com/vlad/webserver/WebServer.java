@@ -5,63 +5,35 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer {
-    private static final String BAD_REQUEST = "HTTP/1.1 400 Bad Request\n";
-    private static final String OK = "HTTP/1.1 200 OK\n";
-    private static final String NOT_FOUND = "HTTP/1.1 404 NotFound\n";
     private int port;
-    private String webAppPath;
+    private ResourceReader resourceReader;
+
+    public void start() throws IOException {
+        try(ServerSocket server = new ServerSocket(port)) {
+            while (true) {
+                try(Socket socket = server.accept();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+
+                    RequestHandler requestHandler = new RequestHandler(bufferedReader, bufferedWriter, resourceReader);
+                    requestHandler.handle();
+
+                }
+            }
+        }
+
+
+    }
 
     public void setPort(int port) {
         this.port = port;
     }
 
-    public void setWebAppPath(String appPath) {
-        this.webAppPath = appPath;
+    public int getPort() {
+        return port;
     }
 
-    public void start() throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            while (true) {
-                try (Socket socket = serverSocket.accept();
-                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-
-                    String message = bufferedReader.readLine();
-                    if (message != null) {
-                        String[] parseMessage = message.split(" ");
-
-                        if (parseMessage[0].equals("GET")) {
-                            String resource = webAppPath + parseMessage[1];
-                            get(bufferedWriter, resource);
-                        } else {
-                            send(bufferedWriter , BAD_REQUEST);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void get(BufferedWriter bufferedWriter, String resource) throws IOException {
-        File file = new File(resource);
-        if (!file.exists()) {
-            send(bufferedWriter, NOT_FOUND);
-        } else {
-            send(bufferedWriter, OK);
-
-            try(BufferedReader fileStream = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
-                String line;
-                while ((line = fileStream.readLine()) != null) {
-                    bufferedWriter.write(line);
-                }
-                bufferedWriter.newLine();
-            }
-        }
-    }
-
-    private void send(BufferedWriter bufferedWriter, String requestCode) throws IOException {
-        bufferedWriter.write(requestCode);
-        bufferedWriter.newLine();
-        bufferedWriter.flush();
+    public void setWebAppPath(String resource) {
+        this.resourceReader = new ResourceReader(resource);
     }
 }
