@@ -20,12 +20,13 @@ public class RequestHandler {
         Request request = requestParser.parseRequest(reader);
 
         ResponseWriter responseWriter = new ResponseWriter(writer);
-        String content = resourceReader.readContent(request.getUrl());
-        if (content!=null) {
+        try {
+            String content = resourceReader.readContent(request.getUrl());
             responseWriter.writeSuccessResponse(content);
-        } else {
+        } catch (IOException e) {
             responseWriter.writeNotFoundResponse();
         }
+
     }
 
     public ResourceReader getResourceReader() {

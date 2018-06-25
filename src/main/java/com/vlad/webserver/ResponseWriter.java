@@ -12,21 +12,19 @@ public class ResponseWriter {
 
     public void writeSuccessResponse(String content) throws IOException {
         bufferedWriter.write("HTTP/1.1 200 OK\n");
-        bufferedWriter.newLine();
+        bufferedWriter.write("\n\r");
         bufferedWriter.write(content);
-        bufferedWriter.newLine();
+        bufferedWriter.write("\n\r");
 
     }
 
     public void writeNotFoundResponse() throws IOException {
         bufferedWriter.write("HTTP/1.1 404 NotFound\n");
-        bufferedWriter.newLine();
-        bufferedWriter.newLine();
+        bufferedWriter.write("\n\r");
     }
 
     public void writeBadRequestResponse() throws IOException {
         bufferedWriter.write("HTTP/1.1 400 BadRequest\n");
-        bufferedWriter.newLine();
-        bufferedWriter.newLine();
+        bufferedWriter.write("\n\r");
     }
 }

@@ -19,8 +19,6 @@ public class ResourceReader {
                 content += line;
             }
             return content;
-        } catch (FileNotFoundException e) {
-            return null;
         }
     }
 
