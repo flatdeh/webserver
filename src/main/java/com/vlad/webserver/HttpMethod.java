@@ -9,12 +9,12 @@ public enum HttpMethod {
     this.httpMethodName = httpMethodName;
   }
 
-  static HttpMethod getHttpMethodByName(String httpMethodName) {
+  static HttpMethod getHttpMethodByName(String name) {
     for (HttpMethod httpMethod : HttpMethod.values()) {
-      if (httpMethod.httpMethodName.equalsIgnoreCase(httpMethodName)) {
+      if (httpMethod.httpMethodName.equalsIgnoreCase(name)) {
         return httpMethod;
       }
     }
-    throw new IllegalArgumentException("HttpMethodName with name \"" + httpMethodName + "\" not found");
+    throw new IllegalArgumentException("HttpMethodName with name \"" + name + "\" not found");
   }
 }
