@@ -1,39 +1,37 @@
 package com.vlad.webserver;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class RequestHandler {
-    private BufferedReader reader;
-    private BufferedWriter writer;
-    private ResourceReader resourceReader;
+  private BufferedReader reader;
+  private BufferedOutputStream writer;
+  private ResourceReader resourceReader;
 
-    public RequestHandler(BufferedReader bufferedReader, BufferedWriter bufferedWriter, ResourceReader resourceReader) {
-        this.reader = bufferedReader;
-        this.writer = bufferedWriter;
-        this.resourceReader = resourceReader;
-    }
+  public RequestHandler(BufferedReader bufferedReader, BufferedOutputStream bufferedOutputStream, ResourceReader resourceReader) {
+    this.reader = bufferedReader;
+    this.writer = bufferedOutputStream;
+    this.resourceReader = resourceReader;
+  }
 
-    public void handle() throws IOException {
-        RequestParser requestParser = new RequestParser();
-        Request request = requestParser.parseRequest(reader);
+  public void handle() throws IOException {
+    RequestParser requestParser = new RequestParser();
 
-        ResponseWriter responseWriter = new ResponseWriter(writer);
-        try {
-            String content = resourceReader.readContent(request.getUrl());
-            responseWriter.writeSuccessResponse(content);
-        } catch (IOException e) {
-            responseWriter.writeNotFoundResponse();
-        }
+  Request request = requestParser.parseRequest(reader);
+  ResponseWriter responseWriter = new ResponseWriter(writer, resourceReader, request);
+  try {
+    responseWriter.writeSuccessResponse();
+    responseWriter.sendContent();
+  } catch (IOException e) {
+    responseWriter.writeNotFoundResponse();
+  }
 
-    }
+  }
 
-    public ResourceReader getResourceReader() {
-        return resourceReader;
-    }
+  public ResourceReader getResourceReader() {
+    return resourceReader;
+  }
 
-    public void setResourceReader(ResourceReader resourceReader) {
-        this.resourceReader = resourceReader;
-    }
+  public void setResourceReader(ResourceReader resourceReader) {
+    this.resourceReader = resourceReader;
+  }
 }
