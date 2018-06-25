@@ -21,7 +21,7 @@ public class RequestParser {
       request.setMethod(httpMethod);
       request.setUrl(requestParams[1]);
     } catch (Exception e) {
-//      throw new NullPointerException("Bad Request!");
+      throw new NullPointerException("Bad Request!");
     }
   }
 

@@ -10,7 +10,7 @@ public class WebServerITest {
     public void testServer() throws IOException {
         WebServer server = new WebServer();
         server.setPort(3000);
-        server.setWebAppPath("src/main/resources/webapp");
+        server.setWebAppPath("src/test/resources/webapp");
         server.start();
     }
 
