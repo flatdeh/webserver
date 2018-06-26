@@ -19,7 +19,8 @@ public class RequestHandler {
         try {
             Request request = requestParser.parseRequest(reader);
             try (InputStream inputStream = resourceReader.readContent(request.getUrl())) {
-                responseWriter.writeSuccessResponse(inputStream);
+                responseWriter.writeSuccessResponse();
+                responseWriter.writeContent(inputStream);
             } catch (IOException e) {
                 responseWriter.writeNotFoundResponse();
             }
