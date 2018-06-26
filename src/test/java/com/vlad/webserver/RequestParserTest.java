@@ -11,8 +11,17 @@ public class RequestParserTest {
 
     @Test
     public void testParseRequest() throws IOException {
-        File file = new File ("src/test/resources/request.txt");
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))){
+        String requestText = "GET /index.html HTTP/1.1\n" +
+                "Host: alizar.habrahabr.ru\n" +
+                "Server: nginx/1.2.1\n" +
+                "Date: Sat, 08 Mar 2014 22:53:46 GMT\n" +
+                "Content-Type: application/octet-stream\n" +
+                "Content-Length: 7\n" +
+                "Last-Modified: Sat, 08 Mar 2014 22:53:30 GMT\n" +
+                "Connection: keep-alive\n" +
+                "Accept-Ranges: bytes\n" +
+                "\n";
+        try (BufferedReader bufferedReader = new BufferedReader(new CharArrayReader(requestText.toCharArray()))) {
             Request request = requestParser.parseRequest(bufferedReader);
             assertEquals("/index.html", request.getUrl());
             assertEquals(HttpMethod.GET, request.getMethod());
