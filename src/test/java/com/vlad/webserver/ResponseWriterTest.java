@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.io.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ResponseWriterTest {
     private BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(new File("src/test/resources/response.txt")));
@@ -53,7 +55,6 @@ public class ResponseWriterTest {
             assertEquals("HTTP/1.1 400 BadRequest\n\r\n", new String(bytes, 0, count));
         }
         bufferedInputStream.close();
-
     }
 
     @Test
@@ -67,5 +68,13 @@ public class ResponseWriterTest {
         assertEquals("GET /index.html HTTP/1.1\nHost: alizar.habrahabr.ru\nServer: nginx/1.2.1\nDate: Sat, 08 Mar 2014 22:53:", new String(bytes, 0, count));
         bufferedInputStream.close();
 
+    }
+
+    @Test
+    public void OutputStreamWriter_Closes_OutputStream_on_Close() throws IOException {
+        OutputStream mock = mock(OutputStream.class);
+        OutputStreamWriter osw = new OutputStreamWriter(mock);
+        osw.close();
+        verify(mock).close();
     }
 }
