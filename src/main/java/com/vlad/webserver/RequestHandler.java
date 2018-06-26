@@ -15,14 +15,16 @@ public class RequestHandler {
 
     public void handle() throws IOException {
         RequestParser requestParser = new RequestParser();
-        Request request = requestParser.parseRequest(reader);
-
-        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStream, resourceReader, request.getUrl());
+        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStream);
         try {
-            responseWriter.writeSuccessResponse();
-            responseWriter.sendContent();
-        } catch (IOException e) {
-            responseWriter.writeNotFoundResponse();
+            Request request = requestParser.parseRequest(reader);
+            try (InputStream inputStream = resourceReader.readContent(request.getUrl())) {
+                responseWriter.writeSuccessResponse(inputStream);
+            } catch (IOException e) {
+                responseWriter.writeNotFoundResponse();
+            }
+        } catch (Exception exception) {
+            responseWriter.writeBadRequestResponse();
         }
     }
 }
