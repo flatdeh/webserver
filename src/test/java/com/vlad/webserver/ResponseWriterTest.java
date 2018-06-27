@@ -26,7 +26,7 @@ public class ResponseWriterTest {
         responseWriter.writeNotFoundResponse();
 
         verify(bufferedOutputStreamMock).write("HTTP/1.1 404 NotFound\n".getBytes());
-        verify(bufferedOutputStreamMock).write("\r\n".getBytes());;
+        verify(bufferedOutputStreamMock).write("\r\n".getBytes());
     }
 
     @Test
@@ -48,7 +48,6 @@ public class ResponseWriterTest {
         InputStream inputStream = new ByteArrayInputStream(content);
         BufferedOutputStream bufferedOutputStream = mock(BufferedOutputStream.class);
         ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStream);
-
         responseWriter.writeContent(inputStream);
 
         verify(bufferedOutputStream).write(contentExpected, 0, 41);
