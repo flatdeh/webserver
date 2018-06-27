@@ -4,77 +4,56 @@ import org.junit.Test;
 
 import java.io.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class ResponseWriterTest {
-    private BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(new File("src/test/resources/response.txt")));
-    private BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(new File("src/test/resources/response.txt")));
-    private ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStream);
-
-    public ResponseWriterTest() throws FileNotFoundException {
-
-    }
 
     @Test
     public void testWriteSuccessResponse() throws IOException {
+        BufferedOutputStream bufferedOutputStreamMock = mock(BufferedOutputStream.class);
+        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStreamMock);
         responseWriter.writeSuccessResponse();
-        bufferedOutputStream.close();
 
-        int count;
-        byte[] bytes = new byte[40];
-        while ((count = bufferedInputStream.read(bytes)) != -1) {
-            assertEquals("HTTP/1.1 200 OK\n\r\n", new String(bytes, 0, count));
-        }
-        bufferedInputStream.close();
+        verify(bufferedOutputStreamMock).write("HTTP/1.1 200 OK\n".getBytes());
+        verify(bufferedOutputStreamMock).write("\r\n".getBytes());
     }
 
     @Test
     public void testWriteNotFoundResponse() throws IOException {
+        BufferedOutputStream bufferedOutputStreamMock = mock(BufferedOutputStream.class);
+        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStreamMock);
         responseWriter.writeNotFoundResponse();
-        bufferedOutputStream.close();
 
-        int count;
-        byte[] bytes = new byte[40];
-        while ((count = bufferedInputStream.read(bytes)) != -1) {
-            assertEquals("HTTP/1.1 404 NotFound\n\r\n", new String(bytes, 0, count));
-        }
-        bufferedInputStream.close();
-
+        verify(bufferedOutputStreamMock).write("HTTP/1.1 404 NotFound\n".getBytes());
+        verify(bufferedOutputStreamMock).write("\r\n".getBytes());;
     }
 
     @Test
     public void testWriteBadRequestResponse() throws IOException {
+        BufferedOutputStream bufferedOutputStreamMock = mock(BufferedOutputStream.class);
+        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStreamMock);
         responseWriter.writeBadRequestResponse();
-        bufferedOutputStream.close();
 
-        int count;
-        byte[] bytes = new byte[40];
-        while ((count = bufferedInputStream.read(bytes)) != -1) {
-            assertEquals("HTTP/1.1 400 BadRequest\n\r\n", new String(bytes, 0, count));
-        }
-        bufferedInputStream.close();
+        verify(bufferedOutputStreamMock).write("HTTP/1.1 400 BadRequest\n".getBytes());
+        verify(bufferedOutputStreamMock).write("\r\n".getBytes());
     }
 
     @Test
     public void writeContent() throws IOException {
-        responseWriter.writeContent(new FileInputStream(new File("src/test/resources/request.txt")));
-        bufferedOutputStream.close();
+        byte[] contentExpected = new byte[256];
+        byte[] content = "body {font-family: Verdana, sans-serif;}".getBytes();
+        System.arraycopy(content,0,contentExpected,0,content.length);
 
-        int count;
-        byte[] bytes = new byte[100];
-        count = bufferedInputStream.read(bytes);
-        assertEquals("GET /index.html HTTP/1.1\nHost: alizar.habrahabr.ru\nServer: nginx/1.2.1\nDate: Sat, 08 Mar 2014 22:53:", new String(bytes, 0, count));
-        bufferedInputStream.close();
+        InputStream inputStream = new ByteArrayInputStream(content);
+        BufferedOutputStream bufferedOutputStream = mock(BufferedOutputStream.class);
+        ResponseWriter responseWriter = new ResponseWriter(bufferedOutputStream);
 
+        responseWriter.writeContent(inputStream);
+
+        verify(bufferedOutputStream).write(contentExpected, 0, 40);
+        verify(bufferedOutputStream).write("\r\n".getBytes());
     }
 
-    @Test
-    public void OutputStreamWriter_Closes_OutputStream_on_Close() throws IOException {
-        OutputStream mock = mock(OutputStream.class);
-        OutputStreamWriter osw = new OutputStreamWriter(mock);
-        osw.close();
-        verify(mock).close();
-    }
 }
+
