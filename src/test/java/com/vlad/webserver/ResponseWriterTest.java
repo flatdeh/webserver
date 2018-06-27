@@ -40,9 +40,9 @@ public class ResponseWriterTest {
     }
 
     @Test
-    public void writeContent() throws IOException {
+    public void testWriteContent() throws IOException {
         byte[] contentExpected = new byte[256];
-        byte[] content = "body {font-family: Verdana, sans-serif;}".getBytes();
+        byte[] content = "body {font-family: Verdana,\n sans-serif;}".getBytes();
         System.arraycopy(content,0,contentExpected,0,content.length);
 
         InputStream inputStream = new ByteArrayInputStream(content);
@@ -51,7 +51,7 @@ public class ResponseWriterTest {
 
         responseWriter.writeContent(inputStream);
 
-        verify(bufferedOutputStream).write(contentExpected, 0, 40);
+        verify(bufferedOutputStream).write(contentExpected, 0, 41);
         verify(bufferedOutputStream).write("\r\n".getBytes());
     }
 
